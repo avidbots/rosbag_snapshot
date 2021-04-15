@@ -311,7 +311,7 @@ bool Snapshotter::writeTopic(rosbag::Bag& bag, MessageQueue& message_queue, stri
   MessageQueue::range_t range = message_queue.rangeFromTimes(req.start_time, req.stop_time);
 
   // open bag if this the first valid topic and there is data
-  if (!bag.isOpen() && range.second > range.first)
+  if (bag.getFileName().empty() && range.second > range.first)
   {
     try
     {
@@ -425,7 +425,7 @@ bool Snapshotter::triggerSnapshotCb(rosbag_snapshot_msgs::TriggerSnapshot::Reque
   }
 
   // If no topics were subscribed/valid/contained data, this is considered a non-success
-  if (!bag.isOpen())
+  if (bag.getFileName().empty())
   {
     res.success = false;
     res.message = res.NO_DATA_MESSAGE;
